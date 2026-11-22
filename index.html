@@ -173,7 +173,7 @@ dd a{display:block;color:inherit}
       else if (k === 'class') n.className = v;
       else if (v !== null && v !== false || k.startsWith('aria-')) n.setAttribute(k, v);
     }
-    for (const c of kids.flat()) if (c !== null && c !== undefined && c !== false) n.append(c);
+    for (const c of kids.flat(Infinity)) if (c !== null && c !== undefined && c !== false) n.append(c);
     return n;
   };
   const store = {
