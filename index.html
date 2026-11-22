@@ -483,7 +483,7 @@ dd a{display:block;color:inherit}
         paint:{'text-color':'#2f3437', 'text-opacity':.22}});
       if (map.getSource('openmaptiles')) map.addLayer({id:'stations', type:'symbol', source:'openmaptiles', 'source-layer':'poi', minzoom:13,
         filter:['all',['==',['get','class'],'railway'],['match',['get','subclass'],['station','subway'],true,false]],
-        layout:{'text-field':['let','n',['to-string',['coalesce',['get','name:ko'],['get','name']]],['case',['==',['slice',['var','n'],-1],'역'],['var','n'],['concat',['var','n'],'역']]], 'text-font':['Noto Sans Bold'], 'text-size':12, 'text-padding':14, 'text-allow-overlap':false},
+        layout:{'text-field':['let','n',['to-string',['coalesce',['get','name:ko'],['get','name']]],['case',['==',['slice',['var','n'],-1],'역'],['var','n'],['concat',['var','n'],'역']]], 'text-font':['Noto Sans Bold'], 'text-size':12, 'text-padding':4, 'text-allow-overlap':false},
         paint:{'text-color':'#175cd3', 'text-halo-color':'#fff', 'text-halo-width':1.8}});
       map.addSource('base', {type:'geojson', data:{type:'Feature', properties:{}, geometry:{type:'Point', coordinates:BASE}}});
       map.addLayer({id:'base-dot', type:'circle', source:'base', paint:{'circle-radius':6, 'circle-color':'#d32f2f', 'circle-stroke-color':'#fff', 'circle-stroke-width':2}});
