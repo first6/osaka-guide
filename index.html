@@ -81,8 +81,8 @@ button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,su
 .empty button{display:block;margin:10px auto 0;padding:10px 14px;color:var(--fg)}
 .note{font-size:11px;color:var(--sub);padding-top:14px}
 
-#card{min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:8px 14px 12px}
-.nav{display:flex;align-items:center;gap:6px;position:sticky;top:0;background:var(--bg)}
+#card{min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:0 14px 12px}
+.nav{display:flex;align-items:center;gap:6px;position:sticky;top:0;z-index:1;padding:8px 0 4px;background:var(--bg)}
 .nav button{width:44px;height:40px;font-size:18px}
 .nav button:disabled{opacity:.3}
 .nav span{flex:1;text-align:center;font-size:12px;color:var(--sub)}
@@ -107,6 +107,33 @@ dt{color:var(--sub)}
 dd{margin:0}
 dd a{display:block;color:inherit}
 
+#move{position:fixed;z-index:5;inset:0;background:var(--bg);overflow-y:auto;overscroll-behavior:contain;padding:0 max(14px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(14px,env(safe-area-inset-left,0px))}
+.mv-head{position:sticky;top:0;z-index:1;background:var(--bg);display:flex;align-items:center;padding:calc(8px + env(safe-area-inset-top,0px)) 0 8px;border-bottom:1px solid var(--line)}
+.mv-head h2{flex:1;margin:0;font-size:19px}
+.mv-head button{width:44px;height:40px;font-size:20px}
+#move table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+#move th,#move td{border:1px solid var(--line);padding:6px;text-align:left;vertical-align:top;font-weight:400}
+#move th{background:var(--soft);color:var(--sub);font-size:12.5px}
+.mv-glance td:first-child{font-weight:700}
+.mv-glance td:nth-child(3),.mv-glance td:last-child,#mv-near td:last-child{white-space:nowrap}
+.mv-tip,.mv-warn{font-size:13.5px;padding:8px 10px;border-radius:6px;margin:10px 0}
+.mv-tip{background:var(--near);color:var(--near-fg)}
+.mv-warn{background:var(--warn);color:var(--warn-fg)}
+#move details{border-top:1px solid var(--line);padding-bottom:4px}
+#move summary{color:var(--fg);padding:12px 0;scroll-margin-top:62px}
+#move details{scroll-margin-top:62px}
+#move summary b{font-size:16px}
+#move summary span{display:block;color:var(--sub);font-size:12.5px;padding-left:16px}
+#move ol{padding-left:22px;margin:4px 0}
+#move li{margin:5px 0}
+#move p{font-size:13.5px}
+.mv-sign{font:700 21px/1.4 "Hiragino Sans","Noto Sans JP",sans-serif;background:var(--soft);text-align:center;padding:10px;margin:8px 0}
+.mv-map{display:grid;place-items:center;min-height:44px;border:1px solid var(--line);border-radius:8px;color:var(--fg);text-decoration:none;font-size:14px;margin:10px 0}
+#move .mv-src{font-size:11px;color:var(--sub);border-top:1px solid var(--line);padding-top:10px}
+.mv-src a{color:inherit}
+.fabs #move-open{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+#move-open-list{width:100%;height:42px;margin-top:6px;font-size:14px}
+
 @media (min-width:820px){
   :root{--side:390px}
   #top{right:auto;width:var(--side);border-right:1px solid var(--line)}
@@ -115,6 +142,7 @@ dd a{display:block;color:inherit}
   #map{left:var(--side);width:calc(100% - var(--side))}
   .maplibregl-ctrl-top-left{top:0}
   .fabs{bottom:28px}
+  #move{right:auto;width:var(--side);border-right:1px solid var(--line)}
   #days button{width:36px}
 }
 </style>
@@ -134,6 +162,7 @@ dd a{display:block;color:inherit}
 </header>
 
 <div class="fabs">
+  <button id="move-open" type="button"><b>🚆</b>이동</button>
   <button id="all" type="button"><b>⤢</b>전체</button>
   <button id="home" type="button"><b>⌂</b>도톤보리</button>
   <button id="locate" type="button"><b>◎</b>내 위치</button>
@@ -143,10 +172,147 @@ dd a{display:block;color:inherit}
   <button id="handle" type="button" aria-expanded="false"><span id="count"></span><span id="hint"></span></button>
   <div id="body">
     <input id="q" type="search" placeholder="찾기: 라멘, 푸딩, 기타, 그릇" aria-label="장소 찾기" autocomplete="off">
+    <button id="move-open-list" type="button">🚆 공항·난바·우메다 이동 방법</button>
     <div id="list"></div>
     <p class="note">2026년 11월에 조사한 개인 메모이며 광고·제휴가 없습니다. 영업시간은 안내 기준이고 격주 휴무는 정확하지 않으니, 가기 전에 ‘사진·영업’으로 확인하세요. 거리는 직선거리로 계산한 어림값입니다. 내 위치는 이 기기 안에서만 계산합니다. 좌표: 일본 국토지리원 주소검색 가공.</p>
   </div>
   <article id="card" hidden></article>
+</section>
+<section id="move" aria-label="이동 방법" hidden>
+<div class="mv-head"><h2>🚆 이동 방법</h2><button id="move-close" type="button" aria-label="이동 방법 닫기">×</button></div>
+<div class="mv-glance">
+  <table>
+    <thead><tr><th>어디로</th><th>이걸 타세요</th><th>시간</th><th>요금</th></tr></thead>
+    <tbody>
+      <tr><td>공항 → 난바</td><td>난카이 공항급행</td><td>약 45분</td><td>970엔</td></tr>
+      <tr><td>난바 → 공항</td><td>난카이 공항급행</td><td>약 45분</td><td>970엔</td></tr>
+      <tr><td>난바 → 우메다</td><td>지하철 미도스지선</td><td>8~9분</td><td>240엔</td></tr>
+      <tr><td>우메다 → 난바</td><td>지하철 미도스지선</td><td>8~9분</td><td>240엔</td></tr>
+      <tr><td>우메다 ↔ 공항</td><td>리무진버스</td><td>약 60분</td><td>1,800엔</td></tr>
+    </tbody>
+  </table>
+</div>
+<p class="mv-tip"><b>공항급행과 지하철은 표 없이 탈 수 있습니다.</b> 터치결제 되는 카드(비자, 마스터 등)를 <b>전용 개찰기</b>에 찍고, 내릴 때 <b>같은 카드</b>로 다시 찍습니다. 카드가 안 될 때를 대비해 현금도 조금 챙기세요.</p>
+
+<details id="mv-in">
+  <summary><b>✈️ 공항 → 난바</b><span>싸게 970엔 · 편하게 1,410엔부터</span></summary>
+  <ol>
+    <li>1터미널은 <b>2층 연결통로</b>로 간사이공항역까지 걸어갑니다. 2터미널은 무료 셔틀(약 7~9분)로 에어로플라자까지 간 뒤 2층으로 갑니다.</li>
+    <li>역 안에 JR과 난카이가 같이 있습니다. <b>난카이(南海)</b> 개찰구로 들어갑니다.</li>
+    <li>1층 <b>1·2번 승강장</b>에서 난바행을 탑니다. 3·4번은 JR입니다.</li>
+    <li>종점 <b>난바</b>에서 내립니다. 도톤보리까지 걸어서 10분 안팎입니다.</li>
+  </ol>
+  <div class="mv-sign" lang="ja">南海　空港急行　なんば</div>
+  <table>
+    <thead><tr><th></th><th>공항급행</th><th>라피트(특급)</th></tr></thead>
+    <tbody>
+      <tr><th>요금</th><td>970엔</td><td>1,670엔<br>온라인 디지털표 1,410엔</td></tr>
+      <tr><th>걸리는 시간</th><td>약 45분</td><td>약 35~40분</td></tr>
+      <tr><th>자리</th><td>자유석, 서서 갈 수도 있음</td><td>전 좌석 지정</td></tr>
+      <tr><th>낮 간격</th><td>약 15분</td><td>약 30분</td></tr>
+      <tr><th>첫차·막차<br>토·일·공휴일</th><td>5:47 · 23:55</td><td>7:06 · 22:55</td></tr>
+      <tr><th>첫차·막차<br>평일</th><td>5:45 · 23:55</td><td>6:53 · 23:00</td></tr>
+    </tbody>
+  </table>
+  <p class="mv-warn">라피트는 카드만 찍고 타면 안 됩니다. <b>특급권(700엔)을 먼저</b> 사야 하고, 차 안에서 사면 300엔이 더 붙습니다.</p>
+  <a class="mv-map" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E9%96%A2%E8%A5%BF%E7%A9%BA%E6%B8%AF%E9%A7%85&amp;destination=%E5%8D%97%E6%B5%B7%E9%9B%A3%E6%B3%A2%E9%A7%85&amp;travelmode=transit">지금 출발하는 열차를 구글맵으로 보기</a>
+</details>
+
+<details id="mv-out">
+  <summary><b>🛫 난바 → 공항</b><span>공항급행 막차는 토·일 22:55 · 평일 23:02</span></summary>
+  <ol>
+    <li><b>난카이 난바역</b>으로 갑니다. 지하철 난바역, JR난바역과 다른 역입니다.</li>
+    <li>3층 북쪽 또는 2층 중앙 개찰구로 들어갑니다.</li>
+    <li>전광판에서 <b>空港急行 + 関西空港</b> 둘 다 적혔는지 보고 탑니다.</li>
+    <li>종점 간사이공항에서 내립니다. 2터미널이면 셔틀 시간까지 20분쯤 더 잡으세요.</li>
+  </ol>
+  <div class="mv-sign" lang="ja">空港急行　関西空港</div>
+  <p class="mv-warn">그냥 <b>急行(급행)</b>은 공항에 안 갑니다. 와카야마행도 같은 노선이라, 잘못 탔으면 이즈미사노(泉佐野)에서 갈아탑니다.</p>
+  <table>
+    <thead><tr><th></th><th>공항급행</th><th>라피트(특급)</th></tr></thead>
+    <tbody>
+      <tr><th>요금</th><td>970엔</td><td>1,670엔<br>온라인 디지털표 1,410엔</td></tr>
+      <tr><th>첫차·막차<br>토·일·공휴일</th><td>5:15 · 22:55</td><td>6:00 · 22:00</td></tr>
+      <tr><th>첫차·막차<br>평일</th><td>5:15 · 23:02</td><td>6:00 · 22:00</td></tr>
+      <tr><th>첫차가 공항에<br>닿는 시각</th><td>5:58~5:59</td><td>6:35~6:37</td></tr>
+    </tbody>
+  </table>
+  <p>면세 환급을 받을 물건이 있으면 <b>짐을 부치기 전에</b> 확인받아야 하니 더 일찍 나서세요.</p>
+  <a class="mv-map" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&amp;origin=%E5%8D%97%E6%B5%B7%E9%9B%A3%E6%B3%A2%E9%A7%85&amp;destination=%E9%96%A2%E8%A5%BF%E7%A9%BA%E6%B8%AF%E9%A7%85&amp;travelmode=transit">지금 출발하는 열차를 구글맵으로 보기</a>
+</details>
+
+<details id="mv-umeda">
+  <summary><b>🚇 난바 ↔ 우메다</b><span>빨간색 미도스지선 · 갈아타기 없음</span></summary>
+  <p>빨간색 <b>미도스지선(御堂筋線)</b>만 찾으면 됩니다. 낮에는 4분 안팎마다 옵니다.</p>
+  <table>
+    <thead><tr><th></th><th>난바 → 우메다</th><th>우메다 → 난바</th></tr></thead>
+    <tbody>
+      <tr><th>타는 방향</th><td lang="ja">箕面萱野・新大阪・江坂・中津</td><td lang="ja">なかもず・天王寺・あびこ・新金岡</td></tr>
+      <tr><th>역 번호</th><td>M20 → M16</td><td>M16 → M20</td></tr>
+      <tr><th>첫차</th><td>5:10</td><td>5:15</td></tr>
+      <tr><th>막차</th><td>밤 12:10</td><td>밤 12:08</td></tr>
+    </tbody>
+  </table>
+  <p>첫차와 막차는 평일·주말이 같습니다. 방향 칸에 적힌 행선지는 어느 것을 타도 됩니다.</p>
+  <p class="mv-warn">우메다는 역 이름이 여러 개입니다. <b>梅田</b>(미도스지선), <b>東梅田</b>, <b>西梅田</b>, <b>JR 大阪</b>이 서로 다른 역이고 지하로 이어져 있습니다. 돌아올 때는 <b>梅田</b>을 찾으세요.</p>
+  <a class="mv-map" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&amp;origin=Namba+Station+Midosuji+Line&amp;destination=Umeda+Station+Midosuji+Line&amp;travelmode=transit">구글맵으로 보기</a>
+</details>
+
+<details id="mv-near">
+  <summary><b>🚶 난바에서 다른 동네</b><span>대부분 걷거나 190~240엔</span></summary>
+  <table>
+    <thead><tr><th class="mv-to">가는 곳</th><th>방법</th><th>요금</th></tr></thead>
+    <tbody>
+      <tr><td>도톤보리, 우라난바, 덴덴타운</td><td>걷기</td><td>0엔</td></tr>
+      <tr><td>신사이바시, 아메리카무라</td><td>걷기, 또는 미도스지선 2분</td><td>190엔</td></tr>
+      <tr><td>혼마치</td><td>미도스지선 북쪽 방향</td><td>190엔</td></tr>
+      <tr><td>신세카이</td><td>미도스지선 남쪽 방향, 동물원앞(動物園前)</td><td>190엔</td></tr>
+      <tr><td>덴노지</td><td>미도스지선 남쪽 방향 7분</td><td>240엔</td></tr>
+    </tbody>
+  </table>
+  <p><b>지하철 1일권</b>은 평일 820엔, 토·일·공휴일 620엔입니다. 주말에는 240엔 구간 3번, 190엔 구간 4번부터 이득입니다.</p>
+  <p>가게까지 가는 길은 지도에서 가게를 누르고 <b>길찾기</b>를 쓰면 됩니다.</p>
+</details>
+
+<details id="mv-bus">
+  <summary><b>🚌 버스로 공항 가기·오기</b><span>짐이 많거나 우메다에서 바로 갈 때</span></summary>
+  <table>
+    <thead><tr><th></th><th>난바 OCAT</th><th>우메다(오사카역 앞)</th></tr></thead>
+    <tbody>
+      <tr><th>요금</th><td>1,400엔</td><td>1,800엔</td></tr>
+      <tr><th>걸리는 시간</th><td>약 50분</td><td>약 60분</td></tr>
+      <tr><th>1터미널 타는 곳</th><td>11번</td><td>5번</td></tr>
+      <tr><th>2터미널 타는 곳</th><td>6번</td><td>1번</td></tr>
+      <tr><th>예약</th><td>없음, 선착순</td><td>없음, 선착순</td></tr>
+    </tbody>
+  </table>
+  <p class="mv-warn"><b>난바 OCAT은 난카이 난바역이 아니라</b> JR난바역 쪽 건물입니다. 공항행은 6:10에 시작합니다. <b>19:20 다음 차가 22:40 막차</b>이고, 막차는 2터미널에 안 섭니다. 공항에서 오는 막차는 1터미널 21:25입니다.</p>
+</details>
+
+<details id="mv-late">
+  <summary><b>🌙 막차를 놓쳤을 때</b><span>우메다행 심야버스, 아니면 택시</span></summary>
+  <table>
+    <tbody>
+      <tr><th>공항 → 우메다<br>심야버스</th><td>1터미널 밤 12:15 출발, 1:13 도착. 2,700엔, <b>현금 안 됨</b>. 만석이면 못 탑니다.</td></tr>
+      <tr><th>공항 → 난바<br>심야버스</th><td><b>운휴 중</b>입니다.</td></tr>
+      <tr><th>택시</th><td>오사카 중심까지 약 23,000엔(통행료 포함 어림값). 밤 10시~새벽 5시는 20% 더 붙습니다.</td></tr>
+    </tbody>
+  </table>
+  <p>공항급행 23:55 막차는 난바에 밤 12:39에 닿습니다. <b>그때는 지하철이 끊겨</b> 걷거나 택시를 타야 합니다.</p>
+</details>
+
+<p class="mv-src">2026년 11월 확인. 시각과 요금은 바뀔 수 있으니 타기 전 전광판을 보세요. 공항급행 요금, 2터미널 셔틀, 택시값은 운영사 원문을 열지 못해 검색으로 확인한 값이고, 도보 시간은 어림값입니다.<br>
+출처:
+<a target="_blank" rel="noopener" href="https://www.nankai.co.jp/kr_railway/access-timetable/">난카이 시간표(한국어)</a>,
+<a target="_blank" rel="noopener" href="https://www.nankai.co.jp/traffic/express/rapit.html">라피트 요금</a>,
+<a target="_blank" rel="noopener" href="https://www.nankai.co.jp/kr_railway/ticket/rapit">라피트 디지털표</a>,
+<a target="_blank" rel="noopener" href="https://www.nankai.co.jp/contents/contactless/">난카이 터치결제</a>,
+<a target="_blank" rel="noopener" href="https://subway.osakametro.co.jp/guide/fare/fare/price.php">지하철 요금</a>,
+<a target="_blank" rel="noopener" href="https://subway.osakametro.co.jp/guide/page/contactless_payment.php">지하철 터치결제</a>,
+<a target="_blank" rel="noopener" href="https://www.kate.co.jp/timetable/detail/OC">난바 버스</a>,
+<a target="_blank" rel="noopener" href="https://www.kate.co.jp/timetable/detail/UM">우메다 버스</a>
+</p>
+
 </section>
 <div id="toast" class="toast" role="status" hidden></div>
 
@@ -358,7 +524,29 @@ dd a{display:block;color:inherit}
       unselect();
     }
   }
+  let movePushed = false;
+  function showMove(on) {
+    if ($('move').hidden !== on) return;
+    $('move').hidden = !on;
+    if (on) { $('move').scrollTop = 0; $('move-close').focus({preventScroll:true}); }
+    else movePushed = false;
+  }
+  function openMove() {
+    try { history.pushState(null, '', '#move'); movePushed = true; } catch (e) {}
+    showMove(true);
+  }
+  function closeMove() {
+    if (movePushed) { history.back(); return; }
+    try { history.replaceState(null, '', location.pathname); } catch (e) {}
+    showMove(false);
+  }
+  $('move-open').onclick = $('move-open-list').onclick = openMove;
+  $('move-close').onclick = closeMove;
+  addEventListener('keydown', e => { if (e.key === 'Escape' && !$('move').hidden) closeMove(); });
+
   addEventListener('popstate', () => {
+    showMove(location.hash === '#move');
+    if (location.hash === '#move') return;
     const id = location.hash.replace('#s-', '');
     if (!id) unselect();
     else if (byId.has(id) && id !== st.sel) select(id, true);
@@ -586,6 +774,7 @@ dd a{display:block;color:inherit}
   const sizeTop = () => document.documentElement.style.setProperty('--top', $('top').offsetHeight + 'px');
   drawTop(); sizeTop(); setSheet('peek'); drawList();
   addEventListener('resize', sizeTop);
+  if (location.hash === '#move') showMove(true);
   startMap();
 })();
 </script>
