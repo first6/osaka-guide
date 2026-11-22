@@ -21,7 +21,7 @@
   color-scheme:light;
   --bg:#fff; --soft:#f7f7f5; --line:#e4e3df; --fg:#2f3437; --sub:#666b6f;
   --near:#e8f3ec; --near-fg:#24603f; --warn:#fbf0d9; --warn-fg:#7a5200; --off:#fbe4e4; --off-fg:#9b2c2c; --crowd:#eeeafb; --crowd-fg:#4b3a8f;
-  --peek:64px; --top:118px;
+  --peek:64px; --top:118px; --strip:96px;
   --font:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;
 }
 *{box-sizing:border-box}
@@ -61,8 +61,12 @@ button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,su
 #sheet{position:fixed;z-index:2;left:0;right:0;bottom:0;background:var(--bg);border-radius:14px 14px 0 0;box-shadow:0 -2px 12px rgba(0,0,0,.14);display:flex;flex-direction:column;height:calc(var(--peek) + env(safe-area-inset-bottom,0px));transition:height .18s ease;padding-bottom:env(safe-area-inset-bottom,0px)}
 #sheet[data-s="half"]{height:50%}
 #sheet[data-s="full"]{height:calc(100% - var(--top))}
-#sheet[data-s="card"]{height:auto;max-height:68%}
-@media (prefers-reduced-motion:reduce){#sheet{transition:none}}
+/* 카드: 처음엔 요약만(높이는 JS가 잰 --cardh). 밀어 올리면 세부(위에 지도 띠 --strip 남김) */
+#sheet[data-s="card"]{height:min(var(--cardh,50%),72%);transition:height .3s cubic-bezier(.2,.85,.25,1)}
+#sheet[data-s="card"][data-full]{height:calc(100% - var(--top) - var(--strip))}
+#sheet[data-s="card"]:not([data-full]) #card{overflow:hidden}
+#sheet.drag{transition:none}
+@media (prefers-reduced-motion:reduce){#sheet,#sheet[data-s]{transition:none}}
 #handle{flex:none;height:var(--peek);border:0;border-radius:14px 14px 0 0;touch-action:none;display:grid;justify-items:center;align-content:center;gap:2px}
 #handle:before{content:"";width:40px;height:4px;border-radius:2px;background:var(--line);margin-bottom:3px}
 #count{font-weight:700}
@@ -84,7 +88,8 @@ button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,su
 .note{font-size:11px;color:var(--sub);padding-top:14px}
 
 #card{min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:0 14px 12px}
-.nav{display:flex;align-items:center;gap:6px;position:sticky;top:0;z-index:1;padding:8px 0 4px;background:var(--bg)}
+.nav{display:flex;align-items:center;gap:6px;position:sticky;top:0;z-index:1;padding:16px 0 4px;background:var(--bg)}
+.nav:before{content:"";position:absolute;top:6px;left:50%;width:40px;height:4px;margin-left:-20px;border-radius:2px;background:var(--line)}
 .nav button{width:44px;height:40px;font-size:18px}
 .nav button:disabled{opacity:.3}
 .nav span{flex:1;text-align:center;font-size:12px;color:var(--sub)}
@@ -104,6 +109,7 @@ button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,su
 .go button{font-size:21px}
 .go button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
 summary{cursor:pointer;color:var(--sub);font-size:14px;padding-top:12px}
+.more-btn{display:block;width:100%;height:40px;margin-top:10px;border:0;border-top:1px solid var(--line);border-radius:0;color:var(--sub);font-size:13.5px}
 .sign{font:700 22px/1.35 "Hiragino Sans","Noto Sans JP",sans-serif;background:var(--soft);text-align:center;padding:10px;margin:6px 0 8px}
 dl{display:grid;grid-template-columns:70px minmax(0,1fr);gap:6px 8px;margin:0;font-size:14px}
 dt{color:var(--sub)}
@@ -142,6 +148,10 @@ dd a{display:block;color:inherit}
   #top{right:auto;width:var(--side);border-right:1px solid var(--line)}
   #sheet,#sheet[data-s]{top:var(--top);right:auto;width:var(--side);height:auto;max-height:none;border-radius:0;box-shadow:none;border-right:1px solid var(--line)}
   #sheet[data-s="peek"] #body{visibility:visible}
+  #sheet[data-s="card"][data-full]{height:auto}
+  #sheet[data-s="card"]:not([data-full]) #card{overflow-y:auto}
+  .nav{padding-top:8px}
+  .nav:before,.more-btn{display:none}
   #map{left:var(--side);width:calc(100% - var(--side))}
   .maplibregl-ctrl-top-left{top:0}
   .fabs{bottom:28px}
@@ -360,7 +370,7 @@ dd a{display:block;color:inherit}
   const byId = new Map(D.map(s => [s.id, s]));
 
   const favs = new Set(store.get('favs', []));
-  const st = {kind:'전체', day:store.get('day', -1), fav:false, q:'', sel:null, sheet:'peek', me:null};
+  const st = {kind:'전체', day:store.get('day', -1), fav:false, q:'', sel:null, sheet:'peek', full:false, me:null};
   let map = null, ready = false, order = [], selFromList = 'peek', pushed = false;
 
   const match = s => (st.kind === '전체' || s.kind === st.kind) && (st.day < 0 || !s.off[st.day]) && (!st.fav || favs.has(s.id)) && (!st.q || s.find.includes(st.q));
@@ -397,6 +407,7 @@ dd a{display:block;color:inherit}
   function setSheet(s) {
     st.sheet = s;
     $('sheet').dataset.s = s;
+    if (s !== 'card') { st.full = false; delete $('sheet').dataset.full; }
     $('card').hidden = s !== 'card';
     document.querySelector('.fabs').hidden = !desktop() && s !== 'peek';
     $('handle').setAttribute('aria-expanded', s === 'half' || s === 'full');
@@ -492,8 +503,86 @@ dd a{display:block;color:inherit}
         el('a', {class:'primary', target:'_blank', rel:'noopener', href:`https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lon}&travelmode=${m * 1.3 / 80 <= 30 ? 'walking' : 'transit'}`}, '길찾기'),
         el('a', {target:'_blank', rel:'noopener', href:`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.sign + ' ' + s.addr)}`}, '사진·영업'),
         star),
-      el('details', {}, el('summary', {}, '메뉴·가격·단점·간판'), el('div', {class:'sign', lang:'ja'}, s.sign), el('dl', {}, rows)));
+      el('button', {type:'button', class:'more-btn', 'aria-expanded':st.full, on:() => setFull(!st.full)}, moreText()),
+      el('section', {class:'more', 'aria-label':'메뉴·가격·단점·간판'}, el('div', {class:'sign', lang:'ja'}, s.sign), el('dl', {}, rows)));
     $('card').scrollTop = 0;
+    sizeCard();
+  }
+
+  /* 폰 카드: 요약 높이 / 세부 높이 / 밀기 */
+  let cardH = 0;
+  const moreText = () => st.full ? '﹀  내리면 지도 보기' : '︿  밀어 올리면 메뉴·가격·단점·간판';
+  const fullH = () => innerHeight - $('top').offsetHeight - parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--strip'));
+  const sheetH = () => st.sheet !== 'card' || desktop() ? $('sheet').offsetHeight : st.full ? fullH() : cardH;
+  function sizeCard() {
+    const b = $('card').querySelector('.more-btn');
+    if (!b || desktop() || st.sheet !== 'card') return;
+    cardH = Math.min(b.offsetTop + b.offsetHeight + parseFloat(getComputedStyle($('sheet')).paddingBottom), innerHeight * .72);
+    $('sheet').style.setProperty('--cardh', cardH + 'px');
+  }
+  function setFull(on) {
+    on = on && !desktop() && st.sheet === 'card';
+    st.full = on;
+    if (on) $('sheet').dataset.full = ''; else delete $('sheet').dataset.full;
+    const b = $('card').querySelector('.more-btn');
+    if (b) { b.setAttribute('aria-expanded', on); b.textContent = moreText(); }
+    if (!on) $('card').scrollTop = 0;
+    if (ready && st.sel) showPin(byId.get(st.sel), false);
+  }
+  function showPin(s, force) {
+    const p = map.project(s.pos), c = map.getContainer(), top = desktop() ? 0 : $('top').offsetHeight;
+    const bottom = c.clientHeight - (desktop() ? 0 : sheetH());
+    const covered = p.y > bottom - 24 || p.y < top + 24 || p.x < 24 || p.x > c.clientWidth - 24;
+    if (force || covered) map.easeTo({center:s.pos, zoom:Math.max(map.getZoom(), 15.2), offset:[0, (top + bottom)/2 - c.clientHeight/2], duration:420});
+  }
+  {
+    // 손가락을 따라 높이가 움직이고, 놓을 때 속도로 갈 곳(세부·요약·닫기)을 정한다.
+    // 세부를 읽는 중(스크롤이 맨 위가 아님)에는 스크롤만 하고, 맨 위에서 내릴 때만 접는다.
+    const card = $('card'), sh = $('sheet');
+    const rubber = (over, dim) => over * dim * .55 / (dim + .55 * over);
+    let g = null;
+    const begin = (y, t) => { g.mode = 'sheet'; g.y = y; g.h = sh.getBoundingClientRect().height; g.cur = g.h; g.hist = [[t, y]]; sh.classList.add('drag'); };
+    card.addEventListener('touchstart', e => {
+      g = null;
+      if (desktop() || st.sheet !== 'card' || e.touches.length !== 1) return;
+      const t = e.touches[0];
+      g = {x:t.clientX, y:t.clientY, last:t.clientY, mode:null, head:!!e.target.closest('.nav')};
+    }, {passive:true});
+    card.addEventListener('touchmove', e => {
+      if (!g) return;
+      const t = e.touches[0], dx = t.clientX - g.x, dy = t.clientY - g.y;
+      if (!g.mode) {
+        if (Math.hypot(dx, dy) < 10) return;
+        if (Math.abs(dx) > Math.abs(dy)) { g = null; return; }   // 옆으로 = 이전·다음 곳
+        if (!st.full || g.head || (dy > 0 && card.scrollTop <= 0)) begin(t.clientY, e.timeStamp);
+        else g.mode = 'scroll';
+      }
+      if (g.mode === 'scroll') {
+        if (card.scrollTop <= 0 && t.clientY > g.last && e.cancelable) begin(t.clientY, e.timeStamp);
+        else { g.last = t.clientY; return; }
+      }
+      if (e.cancelable) e.preventDefault();
+      const max = fullH(), raw = g.h - (t.clientY - g.y);
+      g.cur = raw > max ? max + rubber(raw - max, innerHeight) : Math.max(0, raw);
+      sh.style.height = g.cur + 'px';
+      g.hist.push([e.timeStamp, t.clientY]);
+      if (g.hist.length > 8) g.hist.shift();
+    }, {passive:false});
+    const end = e => {
+      if (!g || g.mode !== 'sheet') { g = null; return; }
+      const h = g.hist.filter(([t]) => e.timeStamp - t < 120), a = h[0], b = h[h.length - 1];
+      const v = h.length > 1 && b[0] > a[0] ? (b[1] - a[1]) / (b[0] - a[0]) * 1000 : 0;   // px/s, +가 아래
+      const land = g.cur - v * .099;   // 놓은 뒤 미끄러져 갈 곳 (감속 .99)
+      const goals = [['full', fullH()], ['card', cardH]];
+      if (!st.full) goals.push(['close', 0]);
+      const [pick] = goals.reduce((x, y) => Math.abs(y[1] - land) < Math.abs(x[1] - land) ? y : x);
+      g = null;
+      sh.classList.remove('drag');
+      sh.style.height = '';
+      if (pick === 'close') close(); else setFull(pick === 'full');
+    };
+    card.addEventListener('touchend', end);
+    card.addEventListener('touchcancel', end);
   }
 
   function select(id, pan) {
@@ -512,10 +601,7 @@ dd a{display:block;color:inherit}
     drawCard();
     if (!ready) return;
     paint();
-    const p = map.project(s.pos), c = map.getContainer(), top = desktop() ? 0 : $('top').offsetHeight;
-    const bottom = desktop() ? c.clientHeight : c.clientHeight - $('sheet').offsetHeight;
-    const covered = p.y > bottom - 24 || p.y < top + 24 || p.x < 24 || p.x > c.clientWidth - 24;
-    if (pan || covered) map.easeTo({center:s.pos, zoom:Math.max(map.getZoom(), 15.2), offset:[0, (top + bottom)/2 - c.clientHeight/2], duration:420});
+    showPin(s, pan);
   }
   function unselect() {
     if (!st.sel) return;
@@ -525,11 +611,10 @@ dd a{display:block;color:inherit}
     drawList();
   }
   function close() {
-    if (pushed) history.back();
-    else {
-      try { history.replaceState(null, '', location.pathname); } catch (e) {}
-      unselect();
-    }
+    const back = pushed;
+    if (!back) { try { history.replaceState(null, '', location.pathname); } catch (e) {} }
+    unselect();   // 바로 닫고, 주소는 뒤로 가기로 맞춘다 (popstate에서는 할 일이 없음)
+    if (back) history.back();
   }
   let movePushed = false;
   function showMove(on) {
@@ -715,7 +800,7 @@ dd a{display:block;color:inherit}
           const gap = f => { const p = map.project(byId.get(f.properties.id).pos); return Math.hypot(p.x-x, p.y-y); };
           const onIcon = hits.filter(f => gap(f) < 18).sort((a,b) => gap(a)-gap(b))[0];
           select((onIcon || label || hits.sort((a,b) => gap(a)-gap(b))[0]).properties.id, false);
-        } else if (st.sel) close();
+        } else if (st.sel) { if (st.full) setFull(false); else close(); }
         else if (st.sheet !== 'peek') setSheet('peek');
       });
     });
@@ -780,7 +865,7 @@ dd a{display:block;color:inherit}
 
   const sizeTop = () => document.documentElement.style.setProperty('--top', $('top').offsetHeight + 'px');
   drawTop(); sizeTop(); setSheet('peek'); drawList();
-  addEventListener('resize', sizeTop);
+  addEventListener('resize', () => { sizeTop(); if (st.full && desktop()) setFull(false); sizeCard(); });
   if (location.hash === '#move') showMove(true);
   startMap();
 })();
