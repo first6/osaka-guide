@@ -118,32 +118,41 @@ dt{color:var(--sub)}
 dd{margin:0}
 dd a{display:block;color:inherit}
 
-#move{position:fixed;z-index:5;inset:0;background:var(--bg);overflow-y:auto;overscroll-behavior:contain;padding:0 max(14px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(14px,env(safe-area-inset-left,0px))}
+:is(#move,#shop){position:fixed;z-index:5;inset:0;background:var(--bg);overflow-y:auto;overscroll-behavior:contain;padding:0 max(14px,env(safe-area-inset-right,0px)) calc(20px + env(safe-area-inset-bottom,0px)) max(14px,env(safe-area-inset-left,0px))}
 .mv-head{position:sticky;top:0;z-index:1;background:var(--bg);display:flex;align-items:center;padding:calc(8px + env(safe-area-inset-top,0px)) 0 8px;border-bottom:1px solid var(--line)}
 .mv-head h2{flex:1;margin:0;font-size:19px}
 .mv-head button{width:44px;height:40px;font-size:20px}
-#move table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
-#move th,#move td{border:1px solid var(--line);padding:6px;text-align:left;vertical-align:top;font-weight:400}
-#move th{background:var(--soft);color:var(--sub);font-size:12.5px}
+:is(#move,#shop) table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0}
+:is(#move,#shop) th,:is(#move,#shop) td{border:1px solid var(--line);padding:6px;text-align:left;vertical-align:top;font-weight:400}
+:is(#move,#shop) th{background:var(--soft);color:var(--sub);font-size:12.5px}
 .mv-glance td:first-child{font-weight:700}
 .mv-glance td:nth-child(3),.mv-glance td:last-child,#mv-near td:last-child{white-space:nowrap}
 .mv-tip,.mv-warn{font-size:13.5px;padding:8px 10px;border-radius:6px;margin:10px 0}
 .mv-tip{background:var(--near);color:var(--near-fg)}
 .mv-warn{background:var(--warn);color:var(--warn-fg)}
-#move details{border-top:1px solid var(--line);padding-bottom:4px}
-#move summary{color:var(--fg);padding:12px 0;scroll-margin-top:62px}
-#move details{scroll-margin-top:62px}
-#move summary b{font-size:16px}
-#move summary span{display:block;color:var(--sub);font-size:12.5px;padding-left:16px}
-#move ol{padding-left:22px;margin:4px 0}
-#move li{margin:5px 0}
-#move p{font-size:13.5px}
+:is(#move,#shop) details{border-top:1px solid var(--line);padding-bottom:4px}
+:is(#move,#shop) summary{color:var(--fg);padding:12px 0;scroll-margin-top:62px}
+:is(#move,#shop) details{scroll-margin-top:62px}
+:is(#move,#shop) summary b{font-size:16px}
+:is(#move,#shop) summary span{display:block;color:var(--sub);font-size:12.5px;padding-left:16px}
+:is(#move,#shop) ol{padding-left:22px;margin:4px 0}
+:is(#move,#shop) li{margin:5px 0}
+:is(#move,#shop) p{font-size:13.5px}
 .mv-sign{font:700 21px/1.4 "Hiragino Sans","Noto Sans JP",sans-serif;background:var(--soft);text-align:center;padding:10px;margin:8px 0}
 .mv-map{display:grid;place-items:center;min-height:44px;border:1px solid var(--line);border-radius:8px;color:var(--fg);text-decoration:none;font-size:14px;margin:10px 0}
-#move .mv-src{font-size:11px;color:var(--sub);border-top:1px solid var(--line);padding-top:10px}
+:is(#move,#shop) .mv-src{font-size:11px;color:var(--sub);border-top:1px solid var(--line);padding-top:10px}
 .mv-src a{color:inherit}
 .fabs #move-open{background:var(--fg);color:var(--bg);border-color:var(--fg)}
-#move-open-list{width:100%;height:42px;margin-top:6px;font-size:14px}
+.sh-ja{display:block;font-family:"Hiragino Sans","Noto Sans JP",sans-serif;color:var(--sub);font-size:12px;margin-top:2px}
+.sh-where{display:block;color:var(--sub);font-size:11.5px}
+.sh-n{display:inline-block;background:var(--near);color:var(--near-fg);border-radius:4px;padding:0 5px;font-size:12px}
+.sh-src{display:block;font-size:11.5px;margin-top:3px}
+.sh-src a{color:var(--sub);margin-right:8px}
+table.sh td:first-child{width:38%}
+.sh-list{padding-left:18px;font-size:13.5px;margin:6px 0}
+.sh-list li{margin:5px 0}
+.sh-list a{color:var(--sub)}
+#move-open-list,#shop-open-list{width:100%;height:42px;margin-top:6px;font-size:14px}
 
 @media (min-width:820px){
   :root{--side:390px}
@@ -157,7 +166,7 @@ dd a{display:block;color:inherit}
   #map{left:var(--side);width:calc(100% - var(--side))}
   .maplibregl-ctrl-top-left{top:0}
   .fabs{bottom:28px}
-  #move{right:auto;width:var(--side);border-right:1px solid var(--line)}
+  :is(#move,#shop){right:auto;width:var(--side);border-right:1px solid var(--line)}
   #days button{width:36px}
 }
 </style>
@@ -178,6 +187,7 @@ dd a{display:block;color:inherit}
 
 <div class="fabs">
   <button id="move-open" type="button"><b>🚆</b>이동</button>
+  <button id="shop-open" type="button"><b>🛒</b>살 것</button>
   <button id="all" type="button"><b>⤢</b>전체</button>
   <button id="home" type="button"><b>⌂</b>도톤보리</button>
   <button id="locate" type="button"><b>◎</b>내 위치</button>
@@ -188,6 +198,7 @@ dd a{display:block;color:inherit}
   <div id="body">
     <input id="q" type="search" placeholder="찾기: 라멘, 푸딩, 기타, 단골, 관광객" aria-label="장소 찾기" autocomplete="off">
     <button id="move-open-list" type="button">🚆 공항·난바·우메다 이동 방법</button>
+    <button id="shop-open-list" type="button">🛒 돈키호테·편의점·드럭스토어 살 것</button>
     <div id="list"></div>
     <p class="note">2026년 11월에 조사한 개인 메모이며 광고·제휴가 없습니다. 영업시간은 안내 기준이고 격주 휴무는 정확하지 않으니, 가기 전에 ‘사진·영업’으로 확인하세요. 거리는 직선거리로 계산한 어림값입니다. 내 위치는 이 기기 안에서만 계산합니다. 👥 손님층은 글쓴이 한두 명이 본 인상이라 시간대에 따라 다르고, 표시가 없으면 모른다는 뜻입니다. 좌표: 일본 국토지리원 주소검색 가공.</p>
   </div>
@@ -327,6 +338,18 @@ dd a{display:block;color:inherit}
 <a target="_blank" rel="noopener" href="https://www.kate.co.jp/timetable/detail/OC">난바 버스</a>,
 <a target="_blank" rel="noopener" href="https://www.kate.co.jp/timetable/detail/UM">우메다 버스</a>
 </p>
+
+</section>
+<section id="shop" aria-label="살 것" hidden>
+<div class="mv-head"><h2>🛒 살 것</h2><button id="shop-close" type="button" aria-label="살 것 닫기">×</button></div>
+<p class="mv-tip"><b>"꼭 사야 하는 것"이라고 할 만큼 의견이 모인 물건은 없었습니다.</b> 한국 후기를 모아 보면 물건 하나에 추천이 1~5명 수준입니다. 그래서 여러 사람이 따로 좋다고 한 것을 위에, 의견이 갈리거나 들여올 수 없는 것을 아래에 두었습니다. 숫자는 서로 다른 글쓴이 수입니다.</p><p class="mv-warn"><b>사지 마세요</b>: 이브 진통제, 곤약젤리(컵·파우치 모두), 고기 든 식품은 한국에 못 들여옵니다. 아래 ⛔ 칸 참고</p>
+<details id="sh-buy"><summary><b>👍 사 올 만한 것</b><span>여러 사람이 따로 추천한 순서</span></summary><table class="sh"><thead><tr><th>물건</th><th>후기</th></tr></thead><tbody><tr><td><b>사케·맥주</b><span class="sh-ja">日本酒・ビール</span><span class="sh-where">슈퍼·드럭스토어</span></td><td><span class="sh-n">추천 8명</span> 싸고 맛있다는 평이 여러 글에. 한국 들여올 때 술은 2L·400달러까지<span class="sh-src"><a href="https://www.82cook.com/entiz/read.php?bn=15&amp;num=4134017" target="_blank" rel="noopener">82쿡</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=869991" target="_blank" rel="noopener">디시</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=872750" target="_blank" rel="noopener">디시</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=873943" target="_blank" rel="noopener">디시</a></span></td></tr><tr><td><b>이치란 라멘 (봉지·포장 세트)</b><span class="sh-ja">一蘭</span><span class="sh-where">돈키·드럭스토어·마트</span></td><td><span class="sh-n">추천 6명</span> 가게 맛만은 못해도 괜찮다는 평. 직구보다 현지에서 사는 게 낫다는 평<span class="sh-src"><a href="https://www.82cook.com/entiz/read.php?bn=15&amp;num=4134017" target="_blank" rel="noopener">82쿡</a> <a href="https://www.82cook.com/entiz/read.php?bn=15&amp;num=4141421" target="_blank" rel="noopener">82쿡</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=868976" target="_blank" rel="noopener">디시</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=876644" target="_blank" rel="noopener">디시</a></span></td></tr><tr><td><b>녹차 티백·카레 루·소스 같은 식재료</b><span class="sh-ja">お茶・カレールー・焼肉のたれ</span><span class="sh-where">드럭스토어·슈퍼</span></td><td><span class="sh-n">추천 4명</span> 한국보다 싸서 쟁여 온다는 평. 페트 음료는 드럭스토어가 편의점의 반값 수준<span class="sh-src"><a href="https://www.82cook.com/entiz/read.php?bn=15&amp;num=4134017" target="_blank" rel="noopener">82쿡</a> <a href="https://www.82cook.com/entiz/read.php?bn=15&amp;num=4141421" target="_blank" rel="noopener">82쿡</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=865649" target="_blank" rel="noopener">디시</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=908440" target="_blank" rel="noopener">디시</a></span></td></tr><tr><td><b>헤파리제 (숙취해소)</b><span class="sh-ja">ヘパリーゼ</span><span class="sh-where">드럭스토어</span></td><td><span class="sh-n">추천 3명 · 후회 1명</span> 편의점 음료형보다 드럭스토어의 알약형(제3류의약품)이 낫다는 평. 효과 없다는 글도 1개<span class="sh-src"><a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=881164" target="_blank" rel="noopener">디시</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=890354" target="_blank" rel="noopener">디시</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=902929" target="_blank" rel="noopener">디시</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=923858" target="_blank" rel="noopener">디시</a></span></td></tr><tr><td><b>오타이산 (소화제)</b><span class="sh-ja">太田胃散</span><span class="sh-where">드럭스토어</span></td><td><span class="sh-n">추천 3명 · 엇갈림 1명</span> 출장 때마다 사 온다는 평, 낱개 가루 포장이 비상용으로 좋다는 평. 일본 약 전반이 별로라는 반대 글 1개<span class="sh-src"><a href="https://www.82cook.com/entiz/read.php?bn=15&amp;num=4141421" target="_blank" rel="noopener">82쿡</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=917503" target="_blank" rel="noopener">디시</a> <a href="https://www.82cook.com/entiz/read.php?bn=15&amp;num=4262115" target="_blank" rel="noopener">82쿡</a></span></td></tr><tr><td><b>스톱파 (설사약)</b><span class="sh-ja">ストッパ下痢止め</span><span class="sh-where">드럭스토어</span></td><td><span class="sh-n">추천 3명</span> 갑자기 배탈 날 때 쓰는 비상약으로 꼭 사 온다는 평<span class="sh-src"><a href="https://www.82cook.com/entiz/read.php?bn=15&amp;num=4134017" target="_blank" rel="noopener">82쿡</a> <a href="https://www.82cook.com/entiz/read.php?bn=15&amp;num=4141421" target="_blank" rel="noopener">82쿡</a></span></td></tr><tr><td><b>로이스 초코 감자칩</b><span class="sh-ja">ロイズ ポテトチップチョコレート</span><span class="sh-where">공항 면세점 등</span></td><td><span class="sh-n">추천 3명</span> 직구는 너무 비싸 현지에서 산다는 평. 공항 면세점에서 판다는 글<span class="sh-src"><a href="https://www.82cook.com/entiz/read.php?bn=15&amp;num=4118457" target="_blank" rel="noopener">82쿡</a> <a href="https://www.82cook.com/entiz/read.php?bn=15&amp;num=4134017" target="_blank" rel="noopener">82쿡</a></span></td></tr><tr><td><b>일본 안약</b><span class="sh-ja">ロート・サンテ 目薬</span><span class="sh-where">드럭스토어·돈키</span></td><td><span class="sh-n">추천 2명 · 엇갈림 3명</span> 포장의 시원함 숫자를 보고 고르라는 조언. 산테FX는 아주 강하다는 평. 외국인 스캔 순위에도 로토 안약 2종<span class="sh-src"><a href="https://www.82cook.com/entiz/read.php?bn=15&amp;num=4118457" target="_blank" rel="noopener">82쿡</a> <a href="https://www.82cook.com/entiz/read.php?bn=15&amp;num=4141421" target="_blank" rel="noopener">82쿡</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=870719" target="_blank" rel="noopener">디시</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=894918" target="_blank" rel="noopener">디시</a></span></td></tr><tr><td><b>센카 퍼펙트 휩 (세안 거품)</b><span class="sh-ja">SENKA パーフェクトホイップ</span><span class="sh-where">드럭스토어·돈키</span></td><td><span class="sh-n">추천 2명</span> 큰 매장이 아니면 품절이 잦음. 돈키보다 100엔 싼 곳도 있다는 글<span class="sh-src"><a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=863316" target="_blank" rel="noopener">디시</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=914099" target="_blank" rel="noopener">디시</a></span></td></tr><tr><td><b>우산 겸 양산</b><span class="sh-ja">晴雨兼用傘</span><span class="sh-where">돈키 등</span></td><td><span class="sh-n">추천 2명</span> 작고 가볍고 막 써도 고장 안 난다는 평. 어르신 선물로 좋아하셨다는 글<span class="sh-src"><a href="https://www.82cook.com/entiz/read.php?bn=15&amp;num=4134017" target="_blank" rel="noopener">82쿡</a> <a href="https://www.82cook.com/entiz/read.php?bn=15&amp;num=4262115" target="_blank" rel="noopener">82쿡</a></span></td></tr><tr><td><b>메론빵이 되는 빵 스프레드</b><span class="sh-ja">カルディ (KALDI) 메론빵 스프레드</span><span class="sh-where">칼디 커피 팜</span></td><td><span class="sh-n">추천 2명</span> 식빵에 발라 구우면 메론빵 맛이 난다는 평이 두 곳에서<span class="sh-src"><a href="https://www.82cook.com/entiz/read.php?bn=15&amp;num=4141421" target="_blank" rel="noopener">82쿡</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=916809" target="_blank" rel="noopener">디시</a></span></td></tr><tr><td><b>따뜻한 수증기 눈 찜질팩</b><span class="sh-ja">めぐりズム 蒸気でホットアイマスク</span><span class="sh-where">드럭스토어</span></td><td><span class="sh-n">추천 1명</span> 매번 사 온다는 평. 뜯으면 바로 따뜻해짐<span class="sh-src"><a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=887904" target="_blank" rel="noopener">디시</a> <a href="https://ameblo.jp/nanakiko348318/entry-12952994587.html" target="_blank" rel="noopener">일본 블로그</a></span></td></tr></tbody></table></details>
+<details id="sh-eat"><summary><b>🍮 편의점·슈퍼에서 먹을 것</b><span>들고 오기보다 그 자리에서</span></summary><table class="sh"><thead><tr><th>물건</th><th>후기</th></tr></thead><tbody><tr><td><b>오하요 저지 우유 푸딩</b><span class="sh-ja">オハヨー ジャージー牛乳プリン</span><span class="sh-where">편의점</span></td><td><span class="sh-n">추천 5명 · 엇갈림 1명</span> &quot;최고 푸딩&quot;이라는 평이 가장 많이 겹침. 같은 회사 크림브륄레도 호평. 공항 편의점에도 있고, 용기가 눌릴 수 있어 들고 타라는 조언<span class="sh-src"><a href="https://bbs.ruliweb.com/community/board/300261/read/30565062" target="_blank" rel="noopener">루리웹</a> <a href="https://www.82cook.com/entiz/read.php?bn=15&amp;num=4118457" target="_blank" rel="noopener">82쿡</a> <a href="https://www.82cook.com/entiz/read.php?bn=15&amp;num=4184793" target="_blank" rel="noopener">82쿡</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=863708" target="_blank" rel="noopener">디시</a></span></td></tr><tr><td><b>편의점 치킨</b><span class="sh-ja">ファミチキ・ななチキ・からあげクン</span><span class="sh-where">편의점</span></td><td><span class="sh-n">추천 5명</span> 파미치키 248엔, 나나치키 약 250엔, 가라아게쿤 288엔(공식). 일본인 후기: 가라아게쿤은 값이 오른 만큼 평범하다는 평<span class="sh-src"><a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=863708" target="_blank" rel="noopener">디시</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=867632" target="_blank" rel="noopener">디시</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=873986" target="_blank" rel="noopener">디시</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=903152" target="_blank" rel="noopener">디시</a></span></td></tr><tr><td><b>로손 디저트</b><span class="sh-ja">ローソン Uchi Café</span><span class="sh-where">로손</span></td><td><span class="sh-n">추천 1명</span> 우유 크림 디저트가 강하다는 평. 일본인 블로그도 바스치·롤케이크 호평<span class="sh-src"><a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=894183" target="_blank" rel="noopener">디시</a> <a href="https://ameblo.jp/guraburo33/entry-12969670217.html" target="_blank" rel="noopener">일본 블로그</a> <a href="https://ameblo.jp/eno-yan/entry-12985216319.html" target="_blank" rel="noopener">일본 블로그</a> <a href="https://ameblo.jp/ushicohomepage0827/entry-12967999556.html" target="_blank" rel="noopener">일본 블로그</a></span></td></tr><tr><td><b>마트 초밥과 저녁 할인</b><span class="sh-ja">スーパーの寿司・値引きシール</span><span class="sh-where">슈퍼</span></td><td><span class="sh-n">추천 6명 · 후회 1명</span> 저녁에 할인 스티커 붙은 초밥·반찬을 사 먹는 글이 가장 많음. 가게마다 맛 차이는 있음<span class="sh-src"><a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=858364" target="_blank" rel="noopener">디시</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=864274" target="_blank" rel="noopener">디시</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=883890" target="_blank" rel="noopener">디시</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=892350" target="_blank" rel="noopener">디시</a></span></td></tr><tr><td><b>삼각김밥·샌드위치</b><span class="sh-ja">おにぎり・サンド</span><span class="sh-where">편의점</span></td><td><span class="sh-n">추천 3명</span> &quot;味付のり&quot;라고 적힌 김은 달짝지근한 조미김. 돈가스 샌드 가성비 좋다는 평<span class="sh-src"><a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=862188" target="_blank" rel="noopener">디시</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=881062" target="_blank" rel="noopener">디시</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=883890" target="_blank" rel="noopener">디시</a></span></td></tr></tbody></table></details>
+<details id="sh-rank"><summary><b>🏷 외국인이 많이 사는 것</b><span>한국 후기는 못 찾았고 판매·스캔 순위만 있음</span></summary><table class="sh"><thead><tr><th>물건</th><th>근거</th></tr></thead><tbody><tr><td><b>毛穴撫子 쌀 팩·마스크</b><span class="sh-ja">毛穴撫子 お米のパック / お米のマスク</span></td><td>돈키 외국인 판매 1위(2026 상반기, 약 40만 개). 외국인 스캔 순위 5·7위<span class="sh-src"><a href="https://digitalpr.jp/r/143236" target="_blank" rel="noopener">공식 순위</a> <a href="https://honichi.com/goods/store_categories/discount_shop/268/ranking/" target="_blank" rel="noopener">공식 순위</a></span></td></tr><tr><td><b>나메라카혼포 눈가 크림</b><span class="sh-ja">なめらか本舗 目元ふっくらクリーム / リンクルアイクリーム</span></td><td>돈키·마츠키요 외국인 스캔 순위 1위<span class="sh-src"><a href="https://honichi.com/goods/store_categories/discount_shop/268/ranking/" target="_blank" rel="noopener">공식 순위</a> <a href="https://honichi.com/goods/store_categories/drug_store/2/ranking/" target="_blank" rel="noopener">공식 순위</a></span></td></tr><tr><td><b>이하다 나이트 팩</b><span class="sh-ja">イハダ 薬用ナイトパック</span></td><td>마츠키요 외국인 스캔 순위 2위<span class="sh-src"><a href="https://honichi.com/goods/store_categories/drug_store/2/ranking/" target="_blank" rel="noopener">공식 순위</a></span></td></tr><tr><td><b>멜라노CC 미용액</b><span class="sh-ja">メラノCC 薬用しみ集中対策</span></td><td>마츠키요 외국인 스캔 순위 3위<span class="sh-src"><a href="https://honichi.com/goods/store_categories/drug_store/2/ranking/" target="_blank" rel="noopener">공식 순위</a></span></td></tr><tr><td><b>휴족시간 (다리 시원 패치)</b><span class="sh-ja">休足時間</span></td><td>돈키 외국인 스캔 순위 10위 바로 아래. 많이 걸은 날 밤에<span class="sh-src"><a href="https://honichi.com/goods/store_categories/discount_shop/268/ranking/" target="_blank" rel="noopener">공식 순위</a></span></td></tr></tbody></table><p>스캔 순위는 외국인이 앱으로 바코드를 찍은 횟수라 판매량과 다릅니다. 돈키 국내 손님 1위 화장품은 한국 브랜드(Anua)라 한국에서 사면 됩니다.</p></details>
+<details id="sh-mixed"><summary><b>🤔 의견이 갈리는 것</b><span>사기 전에 읽어 보기</span></summary><table class="sh"><thead><tr><th>물건</th><th>후기</th></tr></thead><tbody><tr><td><b>동전 모양 파스</b><span class="sh-ja">ロイヒつぼ膏</span><span class="sh-where"></span></td><td><span class="sh-n">추천 3명 · 엇갈림 2명 · 후회 2명</span> 쓰는 사람은 이것만 쓴다는 평과, 어르신 피부에 물집이 생겼다는 평이 맞섬<span class="sh-src"><a href="https://www.82cook.com/entiz/read.php?bn=15&amp;num=4141421" target="_blank" rel="noopener">82쿡</a> <a href="https://www.82cook.com/entiz/read.php?bn=15&amp;num=4170595" target="_blank" rel="noopener">82쿡</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=904088" target="_blank" rel="noopener">디시</a> <a href="https://www.82cook.com/entiz/read.php?bn=15&amp;num=4118457" target="_blank" rel="noopener">82쿡</a></span></td></tr><tr><td><b>넓은 파스 (샤론파스·록소닌)</b><span class="sh-ja">サロンパス・ロキソニンSテープ</span><span class="sh-where"></span></td><td><span class="sh-n">추천 4명 · 엇갈림 1명 · 후회 3명</span> 발바닥에 잘 듣는다는 평과, 질이 별로·붙이면 더 아팠다는 평<span class="sh-src"><a href="https://www.82cook.com/entiz/read.php?bn=15&amp;num=4118457" target="_blank" rel="noopener">82쿡</a> <a href="https://www.82cook.com/entiz/read.php?bn=15&amp;num=4134017" target="_blank" rel="noopener">82쿡</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=893097" target="_blank" rel="noopener">디시</a> <a href="https://www.82cook.com/entiz/read.php?bn=15&amp;num=4262115" target="_blank" rel="noopener">82쿡</a></span></td></tr><tr><td><b>키캣</b><span class="sh-ja">キットカット</span><span class="sh-where"></span></td><td><span class="sh-n">추천 1명 · 후회 1명</span> 사쿠라 맛은 호평, 민트 맛은 &quot;돈 아까움&quot;. 맛을 골라서<span class="sh-src"><a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=863205" target="_blank" rel="noopener">디시</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=886584" target="_blank" rel="noopener">디시</a></span></td></tr><tr><td><b>하이볼 캔</b><span class="sh-ja">ハイボール</span><span class="sh-where"></span></td><td><span class="sh-n">엇갈림 1명 · 후회 1명</span> 돈키 하이볼은 3·5도는 괜찮고 7도는 독하다는 평. 니카 하이볼은 밍밍하다는 평<span class="sh-src"><a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=860846" target="_blank" rel="noopener">디시</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=873943" target="_blank" rel="noopener">디시</a></span></td></tr><tr><td><b>DHC 블루베리 (눈 영양제)</b><span class="sh-ja">DHC 速攻ブルーベリー</span><span class="sh-where"></span></td><td><span class="sh-n">한국 후기 없음</span> 돈키 외국인 판매 1위(2025 하반기). 일본인 후기는 &quot;조금 나은 듯&quot;부터 &quot;확실히 선명&quot;까지<span class="sh-src"><a href="https://news.mynavi.jp/article/20260408-4292728/" target="_blank" rel="noopener">공식 순위</a> <a href="https://ameblo.jp/tiongbahru/entry-12949736890.html" target="_blank" rel="noopener">일본 블로그</a> <a href="https://ameblo.jp/food-review/entry-12948738035.html" target="_blank" rel="noopener">일본 블로그</a></span></td></tr></tbody></table></details>
+<details id="sh-dont"><summary><b>⛔ 사지 말 것·못 들여오는 것</b><span>한국 반입 제한</span></summary><table class="sh"><thead><tr><th>물건</th><th>이유</th></tr></thead><tbody><tr><td><b>이브(EVE) 진통제</b><span class="sh-ja">イブ</span></td><td>한국 반입 제한. 성분이 한국에선 향정신성의약품. 디시에도 모르고 산 글이 2개<span class="sh-src"><a href="https://www.ytn.co.kr/_ln/0134_202504111814211884" target="_blank" rel="noopener">YTN 2025-04</a> <a href="https://v.daum.net/v/20260603083201321" target="_blank" rel="noopener">연합뉴스 팩트체크 2026-06</a></span></td></tr><tr><td><b>곤약젤리 (컵·파우치 모두)</b><span class="sh-ja">こんにゃくゼリー</span></td><td>컵 모양은 2017년, 파우치형은 2023년 8월부터 반입 제한<span class="sh-src"><a href="https://v.daum.net/v/20260603083201321" target="_blank" rel="noopener">연합뉴스 팩트체크 2026-06</a> <a href="https://www.mfds.go.kr/brd/m_841/view.do?seq=39510" target="_blank" rel="noopener">식약처 공지</a></span></td></tr><tr><td><b>파브론 골드A 감기약</b><span class="sh-ja">パブロンゴールドA</span></td><td>금지 발표는 없지만 한국에선 처방이 필요한 성분(디히드로코데인)이 들어 있고 12세 미만 금지. &quot;못 들고 간다는 말을 들었다&quot;는 디시 글 1개<span class="sh-src"><a href="https://v.daum.net/v/V8QrpC4I1N" target="_blank" rel="noopener">식약처 설명 기사</a></span></td></tr><tr><td><b>고기 든 식품</b><span class="sh-ja">肉入り食品</span></td><td>육포·햄·소시지, 고기 든 즉석식품은 반입 금지. 우유도 폐기 대상<span class="sh-src"><a href="https://v.daum.net/v/20260603083201321" target="_blank" rel="noopener">연합뉴스 팩트체크 2026-06</a></span></td></tr><tr><td><b>멜라토닌, 많은 양의 진통제</b><span class="sh-ja">メラトニン</span></td><td>멜라토닌은 반입 제한. 약은 3개월 먹을 양을 넘으면 세금·제한<span class="sh-src"><a href="https://v.daum.net/v/20260603083201321" target="_blank" rel="noopener">연합뉴스 팩트체크 2026-06</a></span></td></tr></tbody></table><p><b>후회했다는 글이 1개씩 있는 것</b></p><ul class="sh-list"><li><b>가루비 잉크 없는 과자</b>: 편의점 드럭 어디서나 팔아서 낚인 기분 <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=894181" target="_blank" rel="noopener">디시</a></li><li><b>니카 하이볼</b>: 밍밍한 하이볼 맛 <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=873943" target="_blank" rel="noopener">디시</a></li><li><b>도쿄 바나나</b>: 그냥 달기만 함 <a href="https://www.82cook.com/entiz/read.php?bn=15&amp;num=4118457" target="_blank" rel="noopener">82쿡</a></li><li><b>쯔유</b>: 무겁고 한국에서도 다 팖 <a href="https://www.82cook.com/entiz/read.php?bn=15&amp;num=4118457" target="_blank" rel="noopener">82쿡</a></li><li><b>킷캣 민초맛</b>: 돈 주고 산 게 한심할 정도로 맛없음 <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=886584" target="_blank" rel="noopener">디시</a></li><li><b>타케노코노사토 (죽순 초코과자)</b>: 동네 슈퍼가 더 저렴 <a href="https://www.82cook.com/entiz/read.php?bn=15&amp;num=4141421" target="_blank" rel="noopener">82쿡</a></li><li><b>패밀리마트 초코민트 아이스</b>: 실패 <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=862319" target="_blank" rel="noopener">디시</a></li><li><b>편의점 야끼소바빵</b>: 다신 안 먹겠다고 다짐 <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=883347" target="_blank" rel="noopener">디시</a></li><li><b>편의점 오뎅</b>: 오뎅바와 달리 별로 맛없음 <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=903282" target="_blank" rel="noopener">디시</a></li><li><b>포키 유바리멜론맛</b>: 멜론향이 감기약 시럽 같고 비쌈 <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=873873" target="_blank" rel="noopener">디시</a></li></ul><ul class="sh-list"><li>아이스크림·마스크팩 같은 액체·젤은 들고 타는 가방에 100mL 넘게 못 넣음. 부치는 짐으로</li><li>가연성 스프레이(발수 코팅제 등)는 비행기에 못 실을 수 있음. 디시에 "스프레이는 하나도 못 가져왔다"는 글</li><li>쯔유·소스 병은 무겁고 한국에서도 판다는 의견</li></ul></details>
+<details id="sh-where"><summary><b>🏪 어디서 살까·면세</b><span>돈키 vs 드럭스토어 vs 슈퍼</span></summary><table class="sh"><thead><tr><th>요점</th><th>후기</th></tr></thead><tbody><tr><td><b>돈키호테는 비싼 편</b></td><td>같은 물건이 드럭스토어·슈퍼에서 더 싼 경우가 많다는 글이 디시·82쿡·루리웹에 10개. 대신 늦게까지 열고 한 번에 다 있고, 면세에 쿠폰 5%를 더하면 비슷하다는 반론도 있음<span class="sh-src"><a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=867631" target="_blank" rel="noopener">디시</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=912968" target="_blank" rel="noopener">디시</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=920863" target="_blank" rel="noopener">디시</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=892858" target="_blank" rel="noopener">디시</a></span></td></tr><tr><td><b>음료는 드럭스토어</b></td><td>오이오차·콜라 같은 페트 음료가 편의점의 반값 수준이라는 글<span class="sh-src"><a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=908440" target="_blank" rel="noopener">디시</a></span></td></tr><tr><td><b>인기 화장품은 품절</b></td><td>센카·비오레 세안제는 큰 매장 아니면 재고가 적고, 한 사람당 개수 제한이 있는 곳도 있음<span class="sh-src"><a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=913544" target="_blank" rel="noopener">디시</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=914099" target="_blank" rel="noopener">디시</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=896185" target="_blank" rel="noopener">디시</a></span></td></tr><tr><td><b>난바 돈키는 붐빔</b></td><td>미도스지점이 너무 붐벼 힘들었다는 글. 다른 매장이나 드럭스토어가 쾌적하다는 평<span class="sh-src"><a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=922247" target="_blank" rel="noopener">디시</a> <a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=874152" target="_blank" rel="noopener">디시</a></span></td></tr><tr><td><b>편의점 계산</b></td><td>말이 서툴면 패밀리마트 계산이 가장 쉬웠다는 글(세븐은 화면 터치, 로손은 셀프 계산대가 많음)<span class="sh-src"><a href="https://gall.dcinside.com/mgallery/board/view/?id=nokanto&amp;no=894150" target="_blank" rel="noopener">디시</a></span></td></tr></tbody></table><ul class="sh-list"><li><b>11월부터 면세 방식이 바뀜</b>: 일단 세금까지 내고 사고, 출국할 때 공항에서 확인받은 뒤 돌려받음</li><li>같은 가게에서 하루 5,000엔(세금 빼고) 이상, 여권 필요. 산 물건은 일본에서 먹거나 쓰지 않기</li><li>돈키는 돌려받는 수수료가 없다고 하지만, 공항에서 현금으로 받으면 수수료가 붙음. "수수료가 있더라"는 디시 글도 있음</li><li>가게마다 환급 앱·사이트가 달라 가입이 필요. 메일로 온 아이디를 꼭 저장하라는 조언</li><li>돈이 들어오기까지 1~2주 걸렸다는 후기. 적게 샀다면 수고에 비해 이득이 작음</li></ul></details>
+<p class="mv-src">근거: 디시 일본여행 갤러리 2026년 7~11월 글 70개, 82쿡·루리웹 글쓴이 55명, 돈키호테·편의점 공식 페이지, 외국인 스캔 순위(訪日ラボ 무료 공개분), 일본인 개인 블로그. 모든 인용은 원문과 대조했습니다. 광고·협찬 글과 접속이 막힌 에펨코리아는 뺐습니다. 네이버·인스타는 읽지 않았습니다. 가격은 바뀔 수 있습니다.</p>
 
 </section>
 <div id="toast" class="toast" role="status" hidden></div>
@@ -646,29 +669,33 @@ dd a{display:block;color:inherit}
     unselect();   // 바로 닫고, 주소는 뒤로 가기로 맞춘다 (popstate에서는 할 일이 없음)
     if (back) history.back();
   }
-  let movePushed = false;
-  function showMove(on) {
-    if ($('move').hidden !== on) return;
-    $('move').hidden = !on;
-    if (on) { $('move').scrollTop = 0; $('move-close').focus({preventScroll:true}); }
-    else movePushed = false;
+  // 전체 화면 안내(🚆 이동, 🛒 살 것). 주소 끝 #move·#shop으로 열고 뒤로가기로 닫는다
+  const PANELS = ['move', 'shop'], panelPushed = {};
+  function showPanel(id, on) {
+    if ($(id).hidden !== on) return;
+    $(id).hidden = !on;
+    if (on) { $(id).scrollTop = 0; $(id + '-close').focus({preventScroll:true}); }
+    else panelPushed[id] = false;
   }
-  function openMove() {
-    try { history.pushState(null, '', '#move'); movePushed = true; } catch (e) {}
-    showMove(true);
+  function openPanel(id) {
+    PANELS.forEach(o => o !== id && showPanel(o, false));
+    try { history.pushState(null, '', '#' + id); panelPushed[id] = true; } catch (e) {}
+    showPanel(id, true);
   }
-  function closeMove() {
-    if (movePushed) { history.back(); return; }
+  function closePanel(id) {
+    if (panelPushed[id]) { history.back(); return; }
     try { history.replaceState(null, '', location.pathname); } catch (e) {}
-    showMove(false);
+    showPanel(id, false);
   }
-  $('move-open').onclick = $('move-open-list').onclick = openMove;
-  $('move-close').onclick = closeMove;
-  addEventListener('keydown', e => { if (e.key === 'Escape' && !$('move').hidden) closeMove(); });
+  for (const id of PANELS) {
+    $(id + '-open').onclick = $(id + '-open-list').onclick = () => openPanel(id);
+    $(id + '-close').onclick = () => closePanel(id);
+  }
+  addEventListener('keydown', e => { if (e.key === 'Escape') PANELS.forEach(id => !$(id).hidden && closePanel(id)); });
 
   addEventListener('popstate', () => {
-    showMove(location.hash === '#move');
-    if (location.hash === '#move') return;
+    PANELS.forEach(id => showPanel(id, location.hash === '#' + id));
+    if (PANELS.some(id => location.hash === '#' + id)) return;
     const id = location.hash.replace('#s-', '');
     if (!id) unselect();
     else if (byId.has(id) && id !== st.sel) select(id, true);
@@ -896,7 +923,7 @@ dd a{display:block;color:inherit}
   const sizeTop = () => document.documentElement.style.setProperty('--top', $('top').offsetHeight + 'px');
   drawTop(); sizeTop(); setSheet('peek'); drawList();
   addEventListener('resize', () => { sizeTop(); if (st.full && desktop()) setFull(false); sizeCard(); });
-  if (location.hash === '#move') showMove(true);
+  PANELS.forEach(id => location.hash === '#' + id && showPanel(id, true));
   startMap();
 })();
 </script>
